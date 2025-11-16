@@ -1,0 +1,120 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "Wireless Bluetooth Headphones",
+      "price": 79.99,
+      "rating": 4.5,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+      "description": "Premium wireless headphones with noise cancellation and 30-hour battery life."
+    },
+    {
+      "id": 2,
+      "title": "Smart Watch Pro",
+      "price": 249.99,
+      "rating": 4.8,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
+      "description": "Advanced smartwatch with health tracking, GPS, and water resistance."
+    },
+    {
+      "id": 3,
+      "title": "Leather Backpack",
+      "price": 89.99,
+      "rating": 4.3,
+      "category": "Fashion",
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400",
+      "description": "Durable leather backpack with multiple compartments and laptop sleeve."
+    },
+    {
+      "id": 4,
+      "title": "Running Shoes",
+      "price": 129.99,
+      "rating": 4.6,
+      "category": "Fashion",
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400",
+      "description": "Comfortable running shoes with breathable mesh and cushioned sole."
+    },
+    {
+      "id": 5,
+      "title": "Coffee Maker Deluxe",
+      "price": 149.99,
+      "rating": 4.4,
+      "category": "Home",
+      "image": "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400",
+      "description": "Programmable coffee maker with thermal carafe and auto-shutoff."
+    },
+    {
+      "id": 6,
+      "title": "Yoga Mat Premium",
+      "price": 39.99,
+      "rating": 4.7,
+      "category": "Sports",
+      "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400",
+      "description": "Non-slip yoga mat with extra cushioning and carrying strap."
+    },
+    {
+      "id": 7,
+      "title": "Laptop Stand",
+      "price": 49.99,
+      "rating": 4.2,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+      "description": "Ergonomic aluminum laptop stand with adjustable height and ventilation."
+    },
+    {
+      "id": 8,
+      "title": "Wireless Mouse",
+      "price": 29.99,
+      "rating": 4.5,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1527814050087-3793815479db?w=400",
+      "description": "Ergonomic wireless mouse with long battery life and precision tracking."
+    },
+    {
+      "id": 9,
+      "title": "Desk Lamp LED",
+      "price": 34.99,
+      "rating": 4.3,
+      "category": "Home",
+      "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400",
+      "description": "Adjustable LED desk lamp with multiple brightness levels and color temperatures."
+    },
+    {
+      "id": 10,
+      "title": "Water Bottle Insulated",
+      "price": 24.99,
+      "rating": 4.6,
+      "category": "Sports",
+      "image": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400",
+      "description": "Stainless steel insulated water bottle keeps drinks cold for 24 hours."
+    },
+    {
+      "id": 11,
+      "title": "Sunglasses Classic",
+      "price": 59.99,
+      "rating": 4.4,
+      "category": "Fashion",
+      "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400",
+      "description": "UV-protected classic aviator sunglasses with polarized lenses."
+    },
+    {
+      "id": 12,
+      "title": "Bluetooth Speaker",
+      "price": 69.99,
+      "rating": 4.5,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400",
+      "description": "Portable Bluetooth speaker with 360-degree sound and waterproof design."
+    }
+  ],
+  "categories": [
+    "All",
+    "Electronics",
+    "Fashion",
+    "Home",
+    "Sports"
+  ]
+}
+
