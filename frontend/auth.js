@@ -1,5 +1,5 @@
 // ===== Authentication Script for Login Page =====
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://ecommerce-jknx.onrender.com';
 
 // Initialize login page
 document.addEventListener('DOMContentLoaded', () => {
