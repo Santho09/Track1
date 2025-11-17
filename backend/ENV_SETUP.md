@@ -15,11 +15,16 @@ This document explains the environment variables needed for the backend.
    - Or use an online generator: https://randomkeygen.com/
 
 2. **FRONTEND_URL** (Required for production)
-   - The URL of your frontend application
+   - The primary URL of your frontend application
    - Example: `https://your-app.vercel.app`
    - Used for CORS configuration
 
-3. **MONGO_URI** (Required)
+3. **ALLOWED_ORIGINS** (Optional but recommended)
+   - A comma-separated list of additional origins that should be allowed via CORS
+   - Useful for local testing or staging mirrors
+   - Example: `http://localhost:5500,http://127.0.0.1:5173`
+
+4. **MONGO_URI** (Required)
    - Connection string for your MongoDB database (Atlas or self-hosted)
    - Example (MongoDB Atlas):
      ```env
@@ -32,12 +37,12 @@ This document explains the environment variables needed for the backend.
 
 ### Optional Environment Variables
 
-4. **PORT** (Optional)
+5. **PORT** (Optional)
    - Server port number
    - Defaults to `3000` if not set
    - Most hosting platforms (Railway, Render, etc.) set this automatically
 
-5. **NODE_ENV** (Optional)
+6. **NODE_ENV** (Optional)
    - Set to `production` for production deployments
    - Defaults to `development` if not set
 
@@ -50,9 +55,10 @@ Create a `.env` file in the `backend/` directory:
 ```env
 JWT_SECRET=your-secret-key-here
 MONGO_URI=your-mongodb-connection-string-here
+FRONTEND_URL=http://localhost:8000
+ALLOWED_ORIGINS=http://127.0.0.1:5500
 PORT=3000
 NODE_ENV=development
-FRONTEND_URL=http://localhost:8000
 ```
 
 ### Production Platforms

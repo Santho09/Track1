@@ -10,15 +10,28 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || '6747933461adbf52fe7187b45a781e14543d2269192d79e55251604d172f2da8'; // In production, use environment variable
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://ecommerce-murex-three-67.vercel.app';
+const ADDITIONAL_ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim()).filter(Boolean)
+    : [];
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://2022cs0152_db_user:santhosh123@cluster0.dnzpkji.mongodb.net/?appName=Cluster0';
 
 // Middleware
-app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-        ? FRONTEND_URL 
-        : '*', // Allow all origins in development
+const corsAllowedOrigins = new Set([FRONTEND_URL, ...ADDITIONAL_ALLOWED_ORIGINS]);
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true); // allow mobile apps / curl / Postman
+        if (process.env.NODE_ENV !== 'production') {
+            return callback(null, true);
+        }
+        if (corsAllowedOrigins.has(origin)) {
+            return callback(null, true);
+        }
+        console.warn(`⚠️  Blocked CORS request from unauthorized origin: ${origin}`);
+        return callback(new Error('CORS not allowed from this origin.'));
+    },
     credentials: true
-}));
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // ===== MongoDB / Mongoose Setup =====
