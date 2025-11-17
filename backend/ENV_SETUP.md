@@ -19,14 +19,25 @@ This document explains the environment variables needed for the backend.
    - Example: `https://your-app.vercel.app`
    - Used for CORS configuration
 
+3. **MONGO_URI** (Required)
+   - Connection string for your MongoDB database (Atlas or self-hosted)
+   - Example (MongoDB Atlas):
+     ```env
+     MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/ecommerce_auth?retryWrites=true&w=majority
+     ```
+   - Example (local MongoDB):
+     ```env
+     MONGO_URI=mongodb://127.0.0.1:27017/ecommerce_auth
+     ```
+
 ### Optional Environment Variables
 
-3. **PORT** (Optional)
+4. **PORT** (Optional)
    - Server port number
    - Defaults to `3000` if not set
    - Most hosting platforms (Railway, Render, etc.) set this automatically
 
-4. **NODE_ENV** (Optional)
+5. **NODE_ENV** (Optional)
    - Set to `production` for production deployments
    - Defaults to `development` if not set
 
@@ -38,6 +49,7 @@ Create a `.env` file in the `backend/` directory:
 
 ```env
 JWT_SECRET=your-secret-key-here
+MONGO_URI=your-mongodb-connection-string-here
 PORT=3000
 NODE_ENV=development
 FRONTEND_URL=http://localhost:8000

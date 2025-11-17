@@ -2,14 +2,15 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const fs = require('fs');
+const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || '6747933461adbf52fe7187b45a781e14543d2269192d79e55251604d172f2da8'; // In production, use environment variable
-const USERS_FILE = path.join(__dirname, 'users.json');
+const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production'; // In production, use environment variable
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://ecommerce-murex-three-67.vercel.app';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://2022cs0152_db_user:santhosh123@cluster0.dnzpkji.mongodb.net/?appName=Cluster0';
 
 // Middleware
 app.use(cors({
@@ -20,32 +21,39 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Initialize users file if it doesn't exist
-if (!fs.existsSync(USERS_FILE)) {
-    fs.writeFileSync(USERS_FILE, JSON.stringify([], null, 2));
-}
+// ===== MongoDB / Mongoose Setup =====
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+    .then(() => {
+        console.log('✅ Connected to MongoDB');
+        // Start server only after successful DB connection
+        app.listen(PORT, () => {
+            console.log(`🚀 Server is running on port ${PORT}`);
+            console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+            if (process.env.NODE_ENV === 'production') {
+                console.log(`🔒 CORS enabled for: ${FRONTEND_URL}`);
+            }
+        });
+    })
+    .catch((error) => {
+        console.error('❌ Failed to connect to MongoDB:', error.message);
+        process.exit(1);
+    });
 
-// Helper function to read users
-function readUsers() {
-    try {
-        const data = fs.readFileSync(USERS_FILE, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error('Error reading users file:', error);
-        return [];
-    }
-}
+// User schema & model
+const userSchema = new mongoose.Schema(
+    {
+        name: { type: String, required: true },
+        email: { type: String, required: true, unique: true, index: true },
+        password: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now },
+    },
+    { collection: 'users' }
+);
 
-// Helper function to write users
-function writeUsers(users) {
-    try {
-        fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-        return true;
-    } catch (error) {
-        console.error('Error writing users file:', error);
-        return false;
-    }
-}
+const User = mongoose.model('User', userSchema);
 
 // Register endpoint
 app.post('/auth/register', async (req, res) => {
@@ -66,8 +74,7 @@ app.post('/auth/register', async (req, res) => {
         }
 
         // Check if user already exists
-        const users = readUsers();
-        const existingUser = users.find(user => user.email === email);
+        const existingUser = await User.findOne({ email });
 
         if (existingUser) {
             return res.status(400).json({ 
@@ -79,17 +86,12 @@ app.post('/auth/register', async (req, res) => {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Create new user
-        const newUser = {
-            id: Date.now().toString(),
+        // Create new user in MongoDB
+        const newUser = await User.create({
             name,
             email,
             password: hashedPassword,
-            createdAt: new Date().toISOString()
-        };
-
-        users.push(newUser);
-        writeUsers(users);
+        });
 
         // Return user without password
         const { password: _, ...userWithoutPassword } = newUser;
@@ -118,9 +120,8 @@ app.post('/auth/login', async (req, res) => {
             });
         }
 
-        // Find user
-        const users = readUsers();
-        const user = users.find(u => u.email === email);
+        // Find user in MongoDB
+        const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(401).json({ 
@@ -140,8 +141,8 @@ app.post('/auth/login', async (req, res) => {
         // Generate JWT token
         const token = jwt.sign(
             { 
-                userId: user.id, 
-                email: user.email 
+                userId: user._id.toString(), 
+                email: user.email,
             },
             JWT_SECRET,
             { expiresIn: '7d' }
@@ -166,15 +167,5 @@ app.post('/auth/login', async (req, res) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Server is running' });
-});
-
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-    console.log(`📝 Users file: ${USERS_FILE}`);
-    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    if (process.env.NODE_ENV === 'production') {
-        console.log(`🔒 CORS enabled for: ${FRONTEND_URL}`);
-    }
 });
 
