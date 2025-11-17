@@ -411,6 +411,57 @@ body {
     max-width: 800px;
 }
 
+.checkout-modal-content {
+    max-width: 640px;
+}
+
+.form-section {
+    margin-bottom: 1.5rem;
+}
+
+.form-section h4 {
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    background-color: var(--surface);
+}
+
+.payment-option input {
+    cursor: pointer;
+}
+
+.payment-option:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.full-width {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
 .close {
     position: absolute;
     right: 1rem;
@@ -536,20 +587,63 @@ body {
 }
 
 .purchase-item {
+    display: flex;
+    gap: 1rem;
     padding: 1rem;
     background-color: var(--background);
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid var(--border-color);
+    align-items: center;
 }
 
-.purchase-item h4 {
+.purchase-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.purchase-item-info h4 {
     color: var(--text-primary);
+    margin-bottom: 0.35rem;
+}
+
+.purchase-item-info p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 0.2rem;
+}
+
+.analytics-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.metric-card h4 {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
     margin-bottom: 0.5rem;
 }
 
-.purchase-item p {
-    color: var(--text-secondary);
-    font-size: 0.875rem;
+.metric-card p {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+#orders-chart {
+    width: 100%;
+    height: 220px;
 }
 
 #spending-chart {

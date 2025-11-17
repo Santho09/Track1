@@ -10,6 +10,7 @@ An innovative, responsive, and interactive e-commerce frontend built with vanill
 - **Sorting**: Sort products by price (low to high, high to low) and rating
 - **Favorites**: Add/remove products to favorites (stored in localStorage)
 - **Product Details**: Modal popup showing detailed product information
+- **Cart & Checkout**: Full cart sidebar plus a checkout modal that captures shipping details and payment method before placing an order
 - **Dark Mode**: Toggle between light and dark themes
 - **Responsive Design**: Fully responsive layout using Flexbox and CSS Grid
 - **Smooth Animations**: Hover effects and transitions throughout
@@ -22,15 +23,15 @@ An innovative, responsive, and interactive e-commerce frontend built with vanill
 - **Token Storage**: JWT tokens stored in localStorage
 
 ### Dashboard Features
-- **Purchase History**: View all past purchases
-- **Data Visualization**: Canvas-based chart showing monthly spending trends
+- **Purchase History**: View all past purchases with product thumbnails
+- **Orders Analytics**: Dedicated analytics module with order metrics and a category distribution chart
 - **User Profile**: Display user information
 
 ### Backend Features
 - **RESTful API**: Express.js backend with authentication endpoints
 - **Password Hashing**: Secure password storage using bcrypt
 - **JWT Tokens**: JSON Web Token generation for secure authentication
-- **User Storage**: JSON-based user database (easily upgradeable to a real database)
+- **MongoDB Storage**: Mongoose models backed by MongoDB (Atlas/local) for persistent users
 
 ## 📁 Project Structure
 
@@ -44,7 +45,8 @@ ecommerce/
 ├── backend/
 │   ├── index.js           # Express server and API endpoints
 │   ├── package.json       # Backend dependencies
-│   └── users.json         # User database (auto-generated)
+│   ├── ENV_SETUP.md       # Environment variable documentation
+│   └── users.json         # Legacy JSON storage (kept for reference)
 └── README.md              # This file
 ```
 

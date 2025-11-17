@@ -5,6 +5,7 @@ let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 let cart = JSON.parse(sessionStorage.getItem('cart')) || []; // Cart array: [{id, quantity, product}]
 let currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
 let purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+let orders = JSON.parse(localStorage.getItem('orders')) || [];
 const API_BASE_URL = 'https://ecommerce-jknx.onrender.com';
 
 // Fallback product data (used when data.json can't be loaded)
@@ -313,11 +314,29 @@ function setupEventListeners() {
     document.getElementById('close-favorites').addEventListener('click', toggleFavoritesSidebar);
     
     // Cart button
-    document.getElementById('cart-btn').addEventListener('click', toggleCartSidebar);
-    document.getElementById('close-cart').addEventListener('click', toggleCartSidebar);
+    const cartBtn = document.getElementById('cart-btn');
+    if (cartBtn) cartBtn.addEventListener('click', toggleCartSidebar);
+    const closeCartBtn = document.getElementById('close-cart');
+    if (closeCartBtn) closeCartBtn.addEventListener('click', toggleCartSidebar);
     
-    // Purchase button
-    document.getElementById('purchase-btn').addEventListener('click', handlePurchase);
+    // Checkout modal
+    const purchaseBtn = document.getElementById('purchase-btn');
+    if (purchaseBtn) purchaseBtn.addEventListener('click', openCheckoutModal);
+    
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    
+    const closeCheckout = document.getElementById('close-checkout');
+    if (closeCheckout) closeCheckout.addEventListener('click', closeCheckoutModal);
+    
+    const checkoutModal = document.getElementById('checkout-modal');
+    if (checkoutModal) {
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target.id === 'checkout-modal') {
+                closeCheckoutModal();
+            }
+        });
+    }
 }
 
 function applyFilters() {
@@ -552,41 +571,106 @@ function renderCart() {
     if (cartTotal) cartTotal.textContent = total.toFixed(2);
 }
 
-function handlePurchase() {
+function openCheckoutModal() {
     if (cart.length === 0) {
         alert('Your cart is empty!');
         return;
     }
+    document.getElementById('checkout-modal').classList.add('show');
+}
+
+function closeCheckoutModal() {
+    document.getElementById('checkout-modal').classList.remove('show');
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) checkoutForm.reset();
+}
+
+function handleCheckoutSubmit(e) {
+    e.preventDefault();
     
-    // Add items to purchase history
-    cart.forEach(item => {
+    if (!currentUser) {
+        alert('Please login to place an order.');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        closeCheckoutModal();
+        return;
+    }
+    
+    const shippingData = {
+        name: document.getElementById('shipping-name').value.trim(),
+        address: document.getElementById('shipping-address').value.trim(),
+        city: document.getElementById('shipping-city').value.trim(),
+        state: document.getElementById('shipping-state').value.trim(),
+        zip: document.getElementById('shipping-zip').value.trim(),
+        phone: document.getElementById('shipping-phone').value.trim()
+    };
+    
+    const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value;
+    
+    if (Object.values(shippingData).some(value => !value) || !paymentMethod) {
+        alert('Please complete all shipping and payment details.');
+        return;
+    }
+    
+    const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    
+    const order = {
+        id: `ORD-${Date.now()}`,
+        items: cart.map(item => ({
+            id: item.id,
+            title: item.product.title,
+            price: item.product.price,
+            quantity: item.quantity,
+            image: item.product.image,
+            category: item.product.category
+        })),
+        totals: {
+            subtotal,
+            shipping: 0,
+            total: subtotal
+        },
+        shipping: shippingData,
+        paymentMethod,
+        status: 'Processing',
+        createdAt: new Date().toISOString()
+    };
+    
+    orders.push(order);
+    localStorage.setItem('orders', JSON.stringify(orders));
+    
+    order.items.forEach(item => {
         for (let i = 0; i < item.quantity; i++) {
             purchaseHistory.push({
-                id: Date.now() + i,
+                id: `${order.id}-${item.id}-${i}`,
                 productId: item.id,
-                productName: item.product.title,
-                price: item.product.price,
-                image: item.product.image,  // Add this line
-                date: new Date().toISOString()
+                productName: item.title,
+                price: item.price,
+                image: item.image,
+                paymentMethod: order.paymentMethod,
+                date: order.createdAt
             });
         }
     });
-    
     localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
     
-    // Clear cart
     cart = [];
     sessionStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     renderCart();
-    toggleCartSidebar();
     
-    alert('Purchase completed successfully!');
+    document.getElementById('cart-sidebar').classList.remove('open');
+    closeCheckoutModal();
     
-    // Update dashboard if visible
+    alert('Order placed successfully!');
+    
     if (document.getElementById('dashboard-page').style.display !== 'none') {
         renderDashboard();
     }
+    renderOrdersAnalytics();
 }
 
 // ===== Authentication =====
@@ -699,6 +783,7 @@ function renderDashboard() {
     }
     
     renderPurchaseHistory();
+    renderOrdersAnalytics();
 }
 
 function renderPurchaseHistory() {
@@ -730,5 +815,98 @@ function renderPurchaseHistory() {
     }).join('');
 }
 
-// Spending chart function removed as per requirements
+function renderOrdersAnalytics() {
+    const metricsContainer = document.getElementById('analytics-metrics');
+    const chartCanvas = document.getElementById('orders-chart');
+    
+    if (!metricsContainer || !chartCanvas) return;
+    
+    const hasOrders = orders.length > 0;
+    
+    if (!hasOrders) {
+        metricsContainer.innerHTML = '<div class="empty-state"><h3>No order data</h3><p>Complete a purchase to see analytics.</p></div>';
+        const ctx = chartCanvas.getContext('2d');
+        ctx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary');
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('No data to display', chartCanvas.width / 2, chartCanvas.height / 2);
+        return;
+    }
+    
+    const totalOrders = orders.length;
+    const totalRevenue = orders.reduce((sum, order) => sum + (order.totals?.total || 0), 0);
+    const averageOrderValue = totalOrders ? totalRevenue / totalOrders : 0;
+    
+    const paymentUsage = {};
+    const categoryTotals = {};
+    
+    orders.forEach(order => {
+        paymentUsage[order.paymentMethod] = (paymentUsage[order.paymentMethod] || 0) + 1;
+        order.items.forEach(item => {
+            const category = item.category || 'Other';
+            categoryTotals[category] = (categoryTotals[category] || 0) + item.quantity;
+        });
+    });
+    
+    const topPaymentMethod = Object.entries(paymentUsage).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
+    
+    metricsContainer.innerHTML = `
+        <div class="metric-card">
+            <h4>Total Orders</h4>
+            <p>${totalOrders}</p>
+        </div>
+        <div class="metric-card">
+            <h4>Total Revenue</h4>
+            <p>$${totalRevenue.toFixed(2)}</p>
+        </div>
+        <div class="metric-card">
+            <h4>Avg. Order Value</h4>
+            <p>$${averageOrderValue.toFixed(2)}</p>
+        </div>
+        <div class="metric-card">
+            <h4>Top Payment</h4>
+            <p>${topPaymentMethod}</p>
+        </div>
+    `;
+    
+    const ctx = chartCanvas.getContext('2d');
+    ctx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+    
+    const categories = Object.keys(categoryTotals);
+    if (!categories.length) {
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary');
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('No category data yet', chartCanvas.width / 2, chartCanvas.height / 2);
+        return;
+    }
+    
+    const values = categories.map(category => categoryTotals[category]);
+    const maxValue = Math.max(...values, 1);
+    const padding = 40;
+    const chartWidth = chartCanvas.width - padding * 2;
+    const chartHeight = chartCanvas.height - padding * 2;
+    const barWidth = chartWidth / categories.length;
+    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+    
+    categories.forEach((category, index) => {
+        const barHeight = (values[index] / maxValue) * chartHeight;
+        const x = padding + index * barWidth + barWidth * 0.15;
+        const y = chartCanvas.height - padding - barHeight;
+        const width = barWidth * 0.7;
+        
+        ctx.fillStyle = primaryColor;
+        ctx.fillRect(x, y, width, barHeight);
+        
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary');
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(values[index], x + width / 2, y - 5);
+        
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary');
+        ctx.font = '11px sans-serif';
+        ctx.fillText(category, x + width / 2, chartCanvas.height - padding + 15);
+    });
+}
 
