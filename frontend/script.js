@@ -134,18 +134,35 @@ function getUserStorageKey(base) {
     return `${base}_${currentUser.email}`;
 }
 
+function migrateLegacyData(base) {
+    if (!currentUser || !currentUser.email) return;
+    const legacyData = JSON.parse(localStorage.getItem(base));
+    if (legacyData && legacyData.length) {
+        const scopedKey = getUserStorageKey(base);
+        const migrated = legacyData.map(entry => ({
+            ...entry,
+            ownerEmail: entry.ownerEmail || currentUser.email
+        }));
+        localStorage.setItem(scopedKey, JSON.stringify(migrated));
+        localStorage.removeItem(base);
+    }
+}
+
 function loadUserScopedData() {
+    migrateLegacyData('purchaseHistory');
+    migrateLegacyData('orders');
+
     const historyKey = getUserStorageKey('purchaseHistory');
     const rawHistory = JSON.parse(localStorage.getItem(historyKey)) || [];
     purchaseHistory = currentUser?.email
-        ? rawHistory.filter(entry => !entry.ownerEmail || entry.ownerEmail === currentUser.email)
-        : rawHistory;
+        ? rawHistory.filter(entry => entry.ownerEmail === currentUser.email)
+        : [];
     
     const ordersKey = getUserStorageKey('orders');
     const rawOrders = JSON.parse(localStorage.getItem(ordersKey)) || [];
     orders = currentUser?.email
-        ? rawOrders.filter(order => !order.ownerEmail || order.ownerEmail === currentUser.email)
-        : rawOrders;
+        ? rawOrders.filter(order => order.ownerEmail === currentUser.email)
+        : [];
 }
 
 function persistUserScopedData() {
