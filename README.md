@@ -78,7 +78,7 @@ Open `http://localhost:8000/login.html` (or wherever you hosted the static files
 <img width="1920" height="1200" alt="Screenshot (253)" src="https://github.com/user-attachments/assets/79ff7b38-8d7e-4d84-a44c-45f2936e13fa" />
 
 
-_Optional_: embed a Loom/MP4 link showing the full end-to-end experience.
+
 
 ---
 
@@ -147,6 +147,7 @@ ecommerce/
 - Update `FRONTEND_URL` & `ALLOWED_ORIGINS` when deploying new environments.
 
 ---
+
 
 
 
