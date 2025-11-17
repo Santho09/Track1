@@ -58,11 +58,26 @@ Open `http://localhost:8000/login.html` (or wherever you hosted the static files
 
 | Flow | Preview |
 | ---- | ------- |
-| Login / Signup | _(insert image or GIF)_ |
-| Products & Hover Cards | _(insert image or GIF)_ |
-| Favorites Sidebar | _(insert image or GIF)_ |
-| Cart & Checkout Modal | _(insert image or GIF)_ |
-| Dashboard & Analytics | _(insert image or GIF)_ |
+| Login / Signup | 
+<img width="1920" height="1200" alt="Screenshot (246)" src="https://github.com/user-attachments/assets/2c70c38a-6a07-4df0-bdd7-9ab37b807eee" />
+
+<img width="1920" height="1200" alt="Screenshot (247)" src="https://github.com/user-attachments/assets/ac7e09c8-0b34-43c5-ac6b-cf7b3ef3b8b2" />
+
+
+| Products & Hover Cards | 
+<img width="1920" height="1200" alt="Screenshot (248)" src="https://github.com/user-attachments/assets/78ef89fe-5023-4d4c-a172-2f401bb65fc5" />
+
+| Favorites Sidebar |
+<img width="1920" height="1200" alt="Screenshot (254)" src="https://github.com/user-attachments/assets/c5833c5d-a8a6-4809-b1e9-5a40761114a2" />
+
+| Cart & Checkout Modal | 
+<img width="1920" height="1200" alt="Screenshot (254)" src="https://github.com/user-attachments/assets/23bde380-c2b8-439b-9df1-f13eea2fddf8" />
+<img width="1920" height="1200" alt="Screenshot (250)" src="https://github.com/user-attachments/assets/89b93bb6-f914-4bf2-8d35-1bf1af4c399c" />
+<img width="1920" height="1200" alt="Screenshot (251)" src="https://github.com/user-attachments/assets/1962f3d8-21fd-4b6d-a6a3-1736a6c735d6" />
+
+| Dashboard & Analytics | 
+<img width="1920" height="1200" alt="Screenshot (253)" src="https://github.com/user-attachments/assets/79ff7b38-8d7e-4d84-a44c-45f2936e13fa" />
+
 
 _Optional_: embed a Loom/MP4 link showing the full end-to-end experience.
 
@@ -133,4 +148,5 @@ ecommerce/
 - Update `FRONTEND_URL` & `ALLOWED_ORIGINS` when deploying new environments.
 
 ---
+
 
