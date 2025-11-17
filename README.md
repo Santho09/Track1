@@ -56,8 +56,6 @@ Open `http://localhost:8000/login.html` (or wherever you hosted the static files
 
 ## 📸 Screenshots / Recording
 
-| Flow | Preview |
-| ---- | ------- |
 | Login / Signup | 
 <img width="1920" height="1200" alt="Screenshot (246)" src="https://github.com/user-attachments/assets/2c70c38a-6a07-4df0-bdd7-9ab37b807eee" />
 
@@ -148,5 +146,6 @@ ecommerce/
 - Update `FRONTEND_URL` & `ALLOWED_ORIGINS` when deploying new environments.
 
 ---
+
 
 
