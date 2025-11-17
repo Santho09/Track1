@@ -69,7 +69,8 @@ Open `http://localhost:8000/login.html` (or wherever you hosted the static files
 <img width="1920" height="1200" alt="Screenshot (254)" src="https://github.com/user-attachments/assets/c5833c5d-a8a6-4809-b1e9-5a40761114a2" />
 
 | Cart & Checkout Modal | 
-<img width="1920" height="1200" alt="Screenshot (254)" src="https://github.com/user-attachments/assets/23bde380-c2b8-439b-9df1-f13eea2fddf8" />
+<img width="1920" height="1200" alt="Screenshot (249)" src="https://github.com/user-attachments/assets/2c486047-1fd4-4969-964e-10361cca7b79" />
+
 <img width="1920" height="1200" alt="Screenshot (250)" src="https://github.com/user-attachments/assets/89b93bb6-f914-4bf2-8d35-1bf1af4c399c" />
 <img width="1920" height="1200" alt="Screenshot (251)" src="https://github.com/user-attachments/assets/1962f3d8-21fd-4b6d-a6a3-1736a6c735d6" />
 
@@ -146,6 +147,7 @@ ecommerce/
 - Update `FRONTEND_URL` & `ALLOWED_ORIGINS` when deploying new environments.
 
 ---
+
 
 
 
